@@ -22,19 +22,19 @@ public class PersonDAO {
         return jdbcTemplate.query("SELECT * FROM Person", new BeanPropertyRowMapper<>(Person.class));
     }
 
-    public void addPerson(Person person) {
+    public void save(Person person) {
         jdbcTemplate.update("INSERT INTO Person(full_name, birth_year) VALUES (?, ?)", person.getFullName(), person.getBirthYear());
     }
 
-    public void updatePerson(int id, Person updatedPerson) {
+    public void update(int id, Person updatedPerson) {
         jdbcTemplate.update("UPDATE Person SET full_name=?, birth_date=? WHERE user_id = ?", updatedPerson.getFullName(), updatedPerson.getBirthYear(), id);
     }
 
-    public void deletePerson(int id) {
+    public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Person WHERE user_id = ?", id);
     }
 
-    public Person getPersonById(int id) {
+    public Person get(int id) {
         return jdbcTemplate.queryForObject("SELECT * FROM Person WHERE user_id = ?", new PersonMapper(), id);
     }
 }
