@@ -20,7 +20,7 @@ public class PeopleController {
     }
 
     @GetMapping
-    public String showPeople(Model model) {
+    public String index(Model model) {
         model.addAttribute("people", personDAO.getPeopleList());
         return "people/index";
     }
