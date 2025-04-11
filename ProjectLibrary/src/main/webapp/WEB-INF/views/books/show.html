@@ -6,10 +6,10 @@
 </head>
 <body>
 <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}"></p>
-<a th:href="@{/books/{id}/edit(id=${book.getBookId()()})}">Редактировать</a>
+<a th:href="@{/books/{id}/edit(id=${book.getBookId()})}">Редактировать</a>
 <br/>
 
-<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBookId()()})}">
+<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBookId()})}">
   <input type="submit" value="Удалить">
 </form>
 </body>
