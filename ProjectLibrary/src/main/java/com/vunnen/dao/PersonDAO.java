@@ -1,6 +1,7 @@
 package com.vunnen.dao;
 
 import com.vunnen.model.Person;
+import com.vunnen.util.PersonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,4 +34,7 @@ public class PersonDAO {
         jdbcTemplate.update("DELETE FROM Person WHERE user_id = ?", id);
     }
 
+    public Person getPersonById(int id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM Person WHERE user_id = ?", new PersonMapper(), id);
+    }
 }
