@@ -47,4 +47,23 @@ public class PersonController {
         personDAO.save(person);
         return "redirect:/people";
     }
+
+    @GetMapping("/{id}/edit")
+    public String editPerson(@PathVariable("id") int id, Model model) {
+        Person person = personDAO.get(id);
+        model.addAttribute("person", person);
+        return "people/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String updatePerson(@PathVariable("id") int id,
+                               @ModelAttribute("person") @Valid Person updatedPerson,
+                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "people/edit";
+        }
+
+        personDAO.update(id, updatedPerson);
+        return "redirect:/people";
+    }
 }

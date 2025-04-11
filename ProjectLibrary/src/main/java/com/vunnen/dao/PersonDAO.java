@@ -19,7 +19,7 @@ public class PersonDAO {
     }
 
     public List<Person> getPeopleList() {
-        return jdbcTemplate.query("SELECT * FROM Person", new BeanPropertyRowMapper<>(Person.class));
+        return jdbcTemplate.query("SELECT * FROM Person ORDER BY user_id", new BeanPropertyRowMapper<>(Person.class));
     }
 
     public void save(Person person) {
@@ -27,7 +27,7 @@ public class PersonDAO {
     }
 
     public void update(int id, Person updatedPerson) {
-        jdbcTemplate.update("UPDATE Person SET full_name=?, birth_date=? WHERE user_id = ?", updatedPerson.getFullName(), updatedPerson.getBirthYear(), id);
+        jdbcTemplate.update("UPDATE Person SET full_name = ?, birth_year = ? WHERE user_id = ?", updatedPerson.getFullName(), updatedPerson.getBirthYear(), id);
     }
 
     public void delete(int id) {
