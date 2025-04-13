@@ -1,6 +1,5 @@
 package com.vunnen.controller;
 
-import com.vunnen.dao.BookDAO;
 import com.vunnen.dao.PersonDAO;
 import com.vunnen.model.Book;
 import com.vunnen.model.Person;
@@ -13,13 +12,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/people")
 @AllArgsConstructor
 public class PeopleController {
     private final PersonDAO personDAO;
-    private final BookDAO bookDAO;
     private final PersonValidator personValidator;
 
     @GetMapping
@@ -31,9 +30,8 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
         Person person = personDAO.get(id);
-        List<Book> books = bookDAO.getBooksByUserId(id);
-        person.setBooks(books);
-
+        Optional<List<Book>> books = personDAO.findBooksByUserId(id);
+        books.ifPresent(bookList -> model.addAttribute("books", bookList));
         model.addAttribute("person", person);
         return "people/show";
     }

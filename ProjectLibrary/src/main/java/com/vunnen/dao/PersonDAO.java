@@ -1,6 +1,8 @@
 package com.vunnen.dao;
 
+import com.vunnen.model.Book;
 import com.vunnen.model.Person;
+import com.vunnen.util.BookMapper;
 import com.vunnen.util.PersonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -41,5 +43,9 @@ public class PersonDAO {
 
     public Optional<Person> findPersonByFullName(String fullName) {
         return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM Person WHERE full_name = ?", new PersonMapper(), fullName));
+    }
+
+    public Optional<List<Book>> findBooksByUserId(int userId) {
+        return Optional.of(jdbcTemplate.query("SELECT * FROM Book WHERE user_id = ?", new BookMapper(), userId));
     }
 }
