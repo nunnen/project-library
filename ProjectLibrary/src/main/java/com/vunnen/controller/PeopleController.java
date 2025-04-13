@@ -4,8 +4,9 @@ import com.vunnen.dao.BookDAO;
 import com.vunnen.dao.PersonDAO;
 import com.vunnen.model.Book;
 import com.vunnen.model.Person;
+import com.vunnen.util.PersonValidator;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +16,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/people")
+@AllArgsConstructor
 public class PeopleController {
     private final PersonDAO personDAO;
     private final BookDAO bookDAO;
-
-    @Autowired
-    public PeopleController(PersonDAO personDAO, BookDAO bookDAO) {
-        this.personDAO = personDAO;
-        this.bookDAO = bookDAO;
-    }
+    private final PersonValidator personValidator;
 
     @GetMapping
     public String index(Model model) {
@@ -49,6 +46,8 @@ public class PeopleController {
     @PostMapping()
     public String createPerson(@ModelAttribute("person") @Valid Person person,
                                BindingResult bindingResult) {
+
+        personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
             return "people/new-person";
         }
