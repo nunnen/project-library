@@ -41,4 +41,12 @@ public class BookDAO {
     public List<Book> getBooksByUserId(int UserId) {
         return jdbcTemplate.query("SELECT * FROM Book WHERE user_id = ?", new BookMapper(), UserId);
     }
+
+    public void addUserToBook(int bookId, int userId) {
+        jdbcTemplate.update("UPDATE Book SET user_id = ? WHERE book_id = ?", userId, bookId);
+    }
+
+    public void removeUserFromBook(int bookId, int userId) {
+        jdbcTemplate.update("UPDATE Book SET user_id = NULL WHERE book_id = ?", bookId);
+    }
 }

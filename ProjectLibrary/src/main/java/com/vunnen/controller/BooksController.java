@@ -1,7 +1,9 @@
 package com.vunnen.controller;
 
 import com.vunnen.dao.BookDAO;
+import com.vunnen.dao.PersonDAO;
 import com.vunnen.model.Book;
+import com.vunnen.model.Person;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,14 +11,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/books")
 public class BooksController {
     private final BookDAO bookDAO;
+    private final PersonDAO personDAO;
 
     @Autowired
-    public BooksController(BookDAO bookDAO) {
+    public BooksController(BookDAO bookDAO, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
+        this.personDAO = personDAO;
     }
 
     @GetMapping
@@ -26,8 +32,10 @@ public class BooksController {
     }
 
     @GetMapping("/{id}")
-    public String showBook(@PathVariable("id") int id, Model model) {
+    public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
+        List<Person> people = personDAO.getPeopleList();
         model.addAttribute("book", bookDAO.get(id));
+        model.addAttribute("people", people);
         return "books/show";
     }
 
@@ -66,5 +74,12 @@ public class BooksController {
     public String deleteBook(@PathVariable("id") int id) {
         bookDAO.delete(id);
         return "redirect:/books";
+    }
+
+    @PutMapping("/{id}")
+    public String addUserToBook(@PathVariable("id") int id,
+                                @ModelAttribute("person") Person person) {
+        bookDAO.addUserToBook(id, person.getUserId());
+        return "redirect:/books/" + id;
     }
 }

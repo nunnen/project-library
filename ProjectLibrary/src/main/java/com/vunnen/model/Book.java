@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import static java.util.Objects.isNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +27,8 @@ public class Book {
     @Min(value = 1900, message = "Книга должна быть старше 1900 года")
     @Max(value = 2025, message = "Книга должна быть младше 2025 года")
     private int year;
+
+    public Boolean isBookRented() {
+        return (userId > 0);
+    }
 }
