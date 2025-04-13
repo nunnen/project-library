@@ -9,15 +9,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static java.util.Objects.isNull;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class Book {
     private int bookId;
-    private int userId;
     @Size(min = 2, max = 200, message = "Название должно быть от 2 до 64 символов")
     @NotEmpty(message = "Поле с названием должно быть заполнено")
     private String name;
@@ -28,7 +25,4 @@ public class Book {
     @Max(value = 2025, message = "Книга должна быть младше 2025 года")
     private int year;
 
-    public Boolean isBookRented() {
-        return (userId > 0);
-    }
 }

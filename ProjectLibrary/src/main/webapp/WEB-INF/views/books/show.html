@@ -6,10 +6,10 @@
 </head>
 <body>
 <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}"></p>
-<div th:if="${not book.isBookRented()}">
+<div th:if="${owner.isEmpty()}">
     <p>Эта книга свободна. Кому назначить её?</p>
     <label for="people">Выберите человека </label>
-    <form th:method="PUT" th:action="@{/books/{id}(id=${book.getBookId()})}">
+    <form th:method="PUT" th:action="@{/books/{id}/assign(id=${book.getBookId()})}">
         <select id="people" th:object="${person}" th:field="*{userId}">
             <option th:each="person : ${people}" th:value="${person.getUserId()}"
                     th:text="${person.getFullName()}"></option>
@@ -18,9 +18,9 @@
     </form>
 </div>
 
-<div th:if="${book.isBookRented()}">
+<div th:if="${owner.isPresent()}">
     Книга сейчас у:
-    <span th:text="${tenant.getFullName()}"></span>
+    <span th:text="${owner.get().getFullName()}"></span>
     <form th:method="PATCH" th:action="@{/books/{id}/release(id=${book.getBookId()})}">
         <input type="submit" value="Освободить">
     </form>

@@ -6,13 +6,13 @@ import com.vunnen.model.Book;
 import com.vunnen.model.Person;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -31,9 +31,12 @@ public class BooksController {
     public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         List<Person> people = personDAO.getPeopleList();
         Book book = bookDAO.get(id);
+        Optional<Person> owner = bookDAO.findPersonByBook(book);
+        model.addAttribute("owner", owner);
+
+        if (owner.isEmpty()) model.addAttribute("people", people);
         model.addAttribute("book", book);
-        if (!book.isBookRented()) model.addAttribute("people", people);
-        else model.addAttribute("tenant", personDAO.get(book.getUserId()));
+
         return "books/show";
     }
 
@@ -74,18 +77,17 @@ public class BooksController {
         return "redirect:/books";
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/assign")
     public String addUserToBook(@PathVariable("id") int id,
                                 @ModelAttribute("person") Person person) {
-        bookDAO.addUserToBook(id, person.getUserId());
+        bookDAO.assignUserToBook(id, person.getUserId());
         return "redirect:/books/" + id;
     }
 
     @PatchMapping("/{id}/release")
     public String releaseBook(@PathVariable("id") int id) {
         Book book = bookDAO.get(id);
-        int userId = book.getUserId();
-        bookDAO.removeUserFromBook(id, userId);
+        bookDAO.removeUserFromBook(book);
         return "redirect:/books/" + id;
     }
 }
