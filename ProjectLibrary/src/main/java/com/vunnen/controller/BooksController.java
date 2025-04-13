@@ -34,8 +34,10 @@ public class BooksController {
     @GetMapping("/{id}")
     public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         List<Person> people = personDAO.getPeopleList();
-        model.addAttribute("book", bookDAO.get(id));
-        model.addAttribute("people", people);
+        Book book = bookDAO.get(id);
+        model.addAttribute("book", book);
+        if (!book.isBookRented()) model.addAttribute("people", people);
+        else model.addAttribute("tenant", personDAO.get(book.getUserId()));
         return "books/show";
     }
 
@@ -80,6 +82,14 @@ public class BooksController {
     public String addUserToBook(@PathVariable("id") int id,
                                 @ModelAttribute("person") Person person) {
         bookDAO.addUserToBook(id, person.getUserId());
+        return "redirect:/books/" + id;
+    }
+
+    @PatchMapping("/{id}/release")
+    public String releaseBook(@PathVariable("id") int id) {
+        Book book = bookDAO.get(id);
+        int userId = book.getUserId();
+        bookDAO.removeUserFromBook(id, userId);
         return "redirect:/books/" + id;
     }
 }

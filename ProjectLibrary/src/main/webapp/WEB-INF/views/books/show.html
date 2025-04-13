@@ -18,6 +18,14 @@
     </form>
 </div>
 
+<div th:if="${book.isBookRented()}">
+    Книга сейчас у:
+    <span th:text="${tenant.getFullName()}"></span>
+    <form th:method="PATCH" th:action="@{/books/{id}/release(id=${book.getBookId()})}">
+        <input type="submit" value="Освободить">
+    </form>
+</div>
+
 <hr/>
 <a th:href="@{/books/{id}/edit(id=${book.getBookId()})}">Редактировать</a>
 <br/>
