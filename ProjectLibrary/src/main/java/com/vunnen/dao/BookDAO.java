@@ -37,4 +37,8 @@ public class BookDAO {
     public Book get(int id) {
         return jdbcTemplate.queryForObject("SELECT * FROM Book WHERE book_id = ?", new BookMapper(), id);
     }
+
+    public List<Book> getBooksByUserId(int UserId) {
+        return jdbcTemplate.query("SELECT * FROM Book WHERE user_id = ?", new BookMapper(), UserId);
+    }
 }

@@ -1,6 +1,8 @@
 package com.vunnen.controller;
 
+import com.vunnen.dao.BookDAO;
 import com.vunnen.dao.PersonDAO;
+import com.vunnen.model.Book;
 import com.vunnen.model.Person;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +11,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDAO personDAO;
+    private final BookDAO bookDAO;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO) {
+    public PeopleController(PersonDAO personDAO, BookDAO bookDAO) {
         this.personDAO = personDAO;
+        this.bookDAO = bookDAO;
     }
 
     @GetMapping
@@ -28,6 +34,9 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
         Person person = personDAO.get(id);
+        List<Book> books = bookDAO.getBooksByUserId(id);
+        person.setBooks(books);
+
         model.addAttribute("person", person);
         return "people/show";
     }
