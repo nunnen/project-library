@@ -5,6 +5,7 @@ import com.vunnen.dao.PersonDAO;
 import com.vunnen.model.Book;
 import com.vunnen.model.Person;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +16,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/books")
+@AllArgsConstructor
 public class BooksController {
     private final BookDAO bookDAO;
     private final PersonDAO personDAO;
-
-    @Autowired
-    public BooksController(BookDAO bookDAO, PersonDAO personDAO) {
-        this.bookDAO = bookDAO;
-        this.personDAO = personDAO;
-    }
 
     @GetMapping
     public String index(Model model) {
